@@ -20,7 +20,7 @@
         <div class="bg-white rounded-lg shadow">
             <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                 <h2 class="text-lg font-semibold text-gray-900">Tin đăng gần đây</h2>
-                <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Đăng tin mới</a>
+                <a href="{{ route('employer.jobs.create') }}" class="text-blue-600 hover:text-blue-800 text-sm">Đăng tin mới</a>
             </div>
             <div class="p-6">
                 @forelse($recentJobs as $job)
@@ -99,7 +99,7 @@
                 <i class="fas fa-building text-purple-600 mr-3"></i>
                 <span>Thông tin công ty</span>
             </a>
-            <a href="#" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+            <a href="{{ route('admin.reports.index') }}" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
                 <i class="fas fa-chart-bar text-orange-600 mr-3"></i>
                 <span>Báo cáo thống kê</span>
             </a>

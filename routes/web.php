@@ -9,6 +9,9 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
+use App\Http\Controllers\Admin\CompanyController as AdminCompanyController;
+use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -78,6 +81,16 @@ Route::middleware('auth')->group(function () {
         // Job management
         Route::get('/jobs', [AdminJobController::class, 'index'])->name('jobs.index');
         Route::delete('/jobs/{job}', [AdminJobController::class, 'destroy'])->name('jobs.destroy');
+        
+        // Company management
+        Route::resource('companies', AdminCompanyController::class)->except(['create', 'store', 'show']);
+        
+        // Settings management
+        Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
+        Route::post('/settings', [AdminSettingController::class, 'update'])->name('settings.update');
+        
+        // Reports
+        Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
     });
 });
 
