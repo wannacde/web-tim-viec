@@ -44,10 +44,11 @@ class UserSeeder extends Seeder
             ]);
 
             // Tạo company cho employer
+            $companyName = $faker->company;
             DB::table('companies')->insert([
                 'user_id' => $employerId,
-                'name' => $faker->company,
-                'slug' => $faker->slug,
+                'name' => $companyName,
+                'slug' => \Illuminate\Support\Str::slug($companyName . '-' . $employerId),
                 'description' => $faker->text(500),
                 'email' => $faker->companyEmail,
                 'phone' => $faker->phoneNumber,

@@ -46,8 +46,8 @@
                 <!-- Job Description -->
                 <div class="mb-8">
                     <h2 class="text-xl font-semibold mb-4">Mô tả công việc</h2>
-                    <div class="prose max-w-none">
-                        {!! nl2br(e($job->description)) !!}
+                    <div class="prose max-w-none whitespace-pre-line text-gray-700 leading-relaxed">
+                        {{ $job->description }}
                     </div>
                 </div>
 
@@ -55,8 +55,8 @@
                 @if($job->requirements)
                 <div class="mb-8">
                     <h2 class="text-xl font-semibold mb-4">Yêu cầu</h2>
-                    <div class="prose max-w-none">
-                        {!! nl2br(e($job->requirements)) !!}
+                    <div class="prose max-w-none whitespace-pre-line text-gray-700 leading-relaxed">
+                        {{ $job->requirements }}
                     </div>
                 </div>
                 @endif
@@ -65,8 +65,8 @@
                 @if($job->benefits)
                 <div class="mb-8">
                     <h2 class="text-xl font-semibold mb-4">Quyền lợi</h2>
-                    <div class="prose max-w-none">
-                        {!! nl2br(e($job->benefits)) !!}
+                    <div class="prose max-w-none whitespace-pre-line text-gray-700 leading-relaxed">
+                        {{ $job->benefits }}
                     </div>
                 </div>
                 @endif
@@ -91,9 +91,20 @@
             <div class="bg-white rounded-lg shadow-md p-6 mb-6">
                 <div class="text-center">
                     @auth
-                        <button class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 mb-3">
-                            Ứng tuyển ngay
-                        </button>
+                        @if(Auth::user()->role === 'student')
+                            @php
+                                $hasApplied = $job->applications()->where('user_id', Auth::id())->exists();
+                            @endphp
+                            @if($hasApplied)
+                                <button class="w-full bg-gray-400 text-white py-3 px-6 rounded-lg font-semibold mb-3" disabled>
+                                    <i class="fas fa-check mr-2"></i>Đã ứng tuyển
+                                </button>
+                            @else
+                                <button onclick="openApplicationModal()" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 mb-3">
+                                    <i class="fas fa-paper-plane mr-2"></i>Ứng tuyển ngay
+                                </button>
+                            @endif
+                        @endif
                         <button onclick="saveJob({{ $job->id }})" 
                                 class="w-full border border-gray-300 text-gray-700 py-2 px-6 rounded-lg hover:bg-gray-50 save-btn">
                             <i class="fas fa-heart mr-2 {{ $isSaved ? 'text-red-500' : '' }}"></i>
@@ -174,8 +185,61 @@
     @endif
 </div>
 
+<!-- Application Modal -->
+@auth
+@if(Auth::user()->role === 'student' && !$job->applications()->where('user_id', Auth::id())->exists())
+<div id="applicationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Ứng tuyển: {{ $job->title }}</h3>
+                <button onclick="closeApplicationModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form action="{{ route('jobs.apply', $job) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">CV của bạn *</label>
+                    <input type="file" name="cv" accept=".pdf,.doc,.docx" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <p class="text-xs text-gray-500 mt-1">Chấp nhận: PDF, DOC, DOCX (tối đa 2MB)</p>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Thư xin việc *</label>
+                    <textarea name="cover_letter" rows="4" required placeholder="Viết vài dòng giới thiệu về bản thân và lý do muốn ứng tuyển..."
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                
+                <div class="flex space-x-3">
+                    <button type="button" onclick="closeApplicationModal()" 
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50">
+                        Hủy
+                    </button>
+                    <button type="submit" 
+                            class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        Gửi đơn
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+@endauth
+
 @push('scripts')
 <script>
+function openApplicationModal() {
+    document.getElementById('applicationModal').classList.remove('hidden');
+}
+
+function closeApplicationModal() {
+    document.getElementById('applicationModal').classList.add('hidden');
+}
+
 function saveJob(jobId) {
     $.post(`/jobs/${jobId}/save`, {
         _token: '{{ csrf_token() }}'

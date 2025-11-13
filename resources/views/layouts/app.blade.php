@@ -32,10 +32,10 @@
                         <a href="{{ route('home') }}" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
                             <i class="fas fa-home mr-2"></i>Trang chủ
                         </a>
-                        <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
+                        <a href="{{ route('jobs.index') }}" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
                             <i class="fas fa-search mr-2"></i>Tìm việc
                         </a>
-                        <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
+                        <a href="{{ route('companies.index') }}" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
                             <i class="fas fa-building mr-2"></i>Công ty
                         </a>
                         

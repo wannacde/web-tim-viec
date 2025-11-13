@@ -9,41 +9,9 @@
 
     <!-- Stats -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-blue-100 text-blue-600">
-                    <i class="fas fa-file-alt text-xl"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Đơn ứng tuyển</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $stats['applications'] }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-green-100 text-green-600">
-                    <i class="fas fa-heart text-xl"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Việc đã lưu</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $stats['saved_jobs'] }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
-                    <i class="fas fa-clock text-xl"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Đang chờ</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $stats['pending_applications'] }}</p>
-                </div>
-            </div>
-        </div>
+        <x-stat-card title="Đơn ứng tuyển" :value="$stats['applications']" icon="fas fa-file-alt" color="blue" />
+        <x-stat-card title="Việc đã lưu" :value="$stats['saved_jobs']" icon="fas fa-heart" color="green" />
+        <x-stat-card title="Đang chờ" :value="$stats['pending_applications']" icon="fas fa-clock" color="yellow" />
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">

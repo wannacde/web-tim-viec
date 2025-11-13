@@ -96,14 +96,7 @@
         
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @foreach($categories->take(8) as $index => $category)
-                <div data-aos="fade-up" data-aos-delay="{{ $index * 100 }}" 
-                     class="category-card p-6 rounded-2xl text-white text-center hover:scale-105 transition-all duration-300 cursor-pointer">
-                    <div class="text-4xl mb-4">
-                        <i class="{{ $category->icon }}"></i>
-                    </div>
-                    <h3 class="font-semibold text-lg">{{ $category->name }}</h3>
-                    <p class="text-sm opacity-90 mt-2">{{ $category->jobs_count ?? rand(10, 50) }} việc làm</p>
-                </div>
+                <x-category-card :category="$category" data-aos-delay="{{ $index * 100 }}" />
             @endforeach
         </div>
     </div>
@@ -120,55 +113,7 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($featuredJobs as $index => $job)
-                <div data-aos="fade-up" data-aos-delay="{{ $index * 100 }}" 
-                     class="job-card bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-yellow-200">
-                    <div class="flex items-start justify-between mb-6">
-                        <div class="flex-1">
-                            <div class="flex items-center mb-3">
-                                <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs px-3 py-1 rounded-full font-semibold">
-                                    ⭐ Nổi bật
-                                </span>
-                                @if($job->is_urgent)
-                                    <span class="bg-red-500 text-white text-xs px-3 py-1 rounded-full font-semibold ml-2 animate-pulse">
-                                        🔥 Gấp
-                                    </span>
-                                @endif
-                            </div>
-                            <h3 class="font-bold text-xl mb-2 text-gray-900">
-                                <a href="{{ route('jobs.show', $job->slug) }}" class="hover:text-blue-600 transition-colors">
-                                    {{ $job->title }}
-                                </a>
-                            </h3>
-                            <p class="text-gray-600 font-medium">{{ $job->company->name }}</p>
-                        </div>
-                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl">
-                            {{ substr($job->company->name, 0, 1) }}
-                        </div>
-                    </div>
-                    
-                    <div class="space-y-3 mb-6">
-                        <div class="flex items-center text-gray-600">
-                            <i class="fas fa-map-marker-alt w-5 text-blue-500"></i>
-                            <span class="ml-3">{{ $job->location->name }}</span>
-                        </div>
-                        <div class="flex items-center text-gray-600">
-                            <i class="fas fa-money-bill-wave w-5 text-green-500"></i>
-                            <span class="ml-3 font-semibold">{{ number_format($job->salary_min) }} - {{ number_format($job->salary_max) }} VNĐ</span>
-                        </div>
-                        <div class="flex items-center text-gray-600">
-                            <i class="fas fa-clock w-5 text-purple-500"></i>
-                            <span class="ml-3">{{ implode(', ', $job->work_schedule) }}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-500">{{ $job->created_at->diffForHumans() }}</span>
-                        <a href="{{ route('jobs.show', $job->slug) }}" 
-                           class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300">
-                            Xem chi tiết
-                        </a>
-                    </div>
-                </div>
+                <x-job-card :job="$job" :featured="true" data-aos-delay="{{ $index * 100 }}" />
             @endforeach
         </div>
     </div>
@@ -195,50 +140,7 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @forelse($jobs as $index => $job)
-                <div data-aos="fade-up" data-aos-delay="{{ ($index % 6) * 100 }}" 
-                     class="job-card bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300">
-                    <div class="flex items-start justify-between mb-6">
-                        <div class="flex-1">
-                            @if($job->is_urgent)
-                                <span class="bg-red-500 text-white text-xs px-3 py-1 rounded-full font-semibold mb-3 inline-block animate-pulse">
-                                    🔥 Gấp
-                                </span>
-                            @endif
-                            <h3 class="font-bold text-xl mb-2 text-gray-900">
-                                <a href="{{ route('jobs.show', $job->slug) }}" class="hover:text-blue-600 transition-colors">
-                                    {{ $job->title }}
-                                </a>
-                            </h3>
-                            <p class="text-gray-600 font-medium">{{ $job->company->name }}</p>
-                        </div>
-                        <div class="w-14 h-14 bg-gradient-to-br from-gray-400 to-gray-600 rounded-xl flex items-center justify-center text-white font-bold">
-                            {{ substr($job->company->name, 0, 1) }}
-                        </div>
-                    </div>
-                    
-                    <div class="space-y-3 mb-6">
-                        <div class="flex items-center text-gray-600">
-                            <i class="fas fa-tag w-5 text-orange-500"></i>
-                            <span class="ml-3">{{ $job->category->name }}</span>
-                        </div>
-                        <div class="flex items-center text-gray-600">
-                            <i class="fas fa-map-marker-alt w-5 text-blue-500"></i>
-                            <span class="ml-3">{{ $job->location->name }}</span>
-                        </div>
-                        <div class="flex items-center text-gray-600">
-                            <i class="fas fa-money-bill-wave w-5 text-green-500"></i>
-                            <span class="ml-3 font-semibold">{{ number_format($job->salary_min) }} - {{ number_format($job->salary_max) }} VNĐ</span>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-500">{{ $job->created_at->diffForHumans() }}</span>
-                        <a href="{{ route('jobs.show', $job->slug) }}" 
-                           class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300">
-                            Xem chi tiết
-                        </a>
-                    </div>
-                </div>
+                <x-job-card :job="$job" data-aos-delay="{{ ($index % 6) * 100 }}" />
             @empty
                 <div class="col-span-full text-center py-16" data-aos="fade-up">
                     <div class="text-6xl mb-4">😔</div>

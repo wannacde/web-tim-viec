@@ -9,53 +9,10 @@
 
     <!-- Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-blue-100 text-blue-600">
-                    <i class="fas fa-briefcase text-xl"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Tổng việc làm</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $stats['total_jobs'] }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-green-100 text-green-600">
-                    <i class="fas fa-users text-xl"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Tổng người dùng</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $stats['total_users'] }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-purple-100 text-purple-600">
-                    <i class="fas fa-building text-xl"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Tổng công ty</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $stats['total_companies'] }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
-                    <i class="fas fa-file-alt text-xl"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Tổng ứng tuyển</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $stats['total_applications'] }}</p>
-                </div>
-            </div>
-        </div>
+        <x-stat-card title="Tổng việc làm" :value="$stats['total_jobs']" icon="fas fa-briefcase" color="blue" />
+        <x-stat-card title="Tổng người dùng" :value="$stats['total_users']" icon="fas fa-users" color="green" />
+        <x-stat-card title="Tổng công ty" :value="$stats['total_companies']" icon="fas fa-building" color="purple" />
+        <x-stat-card title="Tổng ứng tuyển" :value="$stats['total_applications']" icon="fas fa-file-alt" color="yellow" />
     </div>
 
     <!-- Management Sections -->
@@ -66,7 +23,7 @@
                 <h2 class="text-lg font-semibold text-gray-900">Quản lý người dùng</h2>
             </div>
             <p class="text-gray-600 mb-4">Quản lý tài khoản sinh viên và nhà tuyển dụng</p>
-            <a href="#" class="text-blue-600 hover:text-blue-800 font-medium">Xem chi tiết →</a>
+            <a href="{{ route('admin.users.index') }}" class="text-blue-600 hover:text-blue-800 font-medium">Xem chi tiết →</a>
         </div>
 
         <div class="bg-white rounded-lg shadow p-6">
@@ -75,7 +32,7 @@
                 <h2 class="text-lg font-semibold text-gray-900">Quản lý việc làm</h2>
             </div>
             <p class="text-gray-600 mb-4">Duyệt và quản lý các tin tuyển dụng</p>
-            <a href="#" class="text-green-600 hover:text-green-800 font-medium">Xem chi tiết →</a>
+            <a href="{{ route('admin.jobs.index') }}" class="text-green-600 hover:text-green-800 font-medium">Xem chi tiết →</a>
         </div>
 
         <div class="bg-white rounded-lg shadow p-6">
@@ -93,7 +50,7 @@
                 <h2 class="text-lg font-semibold text-gray-900">Quản lý danh mục</h2>
             </div>
             <p class="text-gray-600 mb-4">Quản lý ngành nghề và địa điểm</p>
-            <a href="#" class="text-orange-600 hover:text-orange-800 font-medium">Xem chi tiết →</a>
+            <a href="{{ route('admin.categories.index') }}" class="text-orange-600 hover:text-orange-800 font-medium">Xem chi tiết →</a>
         </div>
 
         <div class="bg-white rounded-lg shadow p-6">
