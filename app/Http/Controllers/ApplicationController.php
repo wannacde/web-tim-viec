@@ -72,4 +72,17 @@ class ApplicationController extends Controller
 
         return back()->with('success', 'Cập nhật trạng thái thành công!');
     }
+
+    /**
+     * Hiển thị danh sách các đơn ứng tuyển của sinh viên.
+     */
+    public function studentApplications()
+    {
+        $applications = Application::with(['job.company', 'job.category'])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->paginate(15);
+
+        return view('dashboard.student.applications', compact('applications'));
+    }
 }

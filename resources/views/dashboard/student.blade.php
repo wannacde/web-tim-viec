@@ -78,13 +78,13 @@
                 <i class="fas fa-search text-blue-600 mr-3"></i>
                 <span>Tìm việc làm mới</span>
             </a>
-            <a href="#" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
-                <i class="fas fa-user-edit text-green-600 mr-3"></i>
-                <span>Cập nhật hồ sơ</span>
+            <a href="{{ route('student.applications') }}" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+                <i class="fas fa-history text-green-600 mr-3"></i>
+                <span>Lịch sử ứng tuyển</span>
             </a>
-            <a href="#" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
-                <i class="fas fa-file-upload text-purple-600 mr-3"></i>
-                <span>Tải lên CV</span>
+            <a href="{{ route('profile.edit') }}" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+                <i class="fas fa-user-edit text-purple-600 mr-3"></i>
+                <span>Cập nhật hồ sơ</span>
             </a>
         </div>
     </div>

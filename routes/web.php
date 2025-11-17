@@ -44,6 +44,11 @@ Route::middleware('auth')->group(function () {
     // Application routes
     Route::post('/jobs/{job}/apply', [ApplicationController::class, 'store'])->name('jobs.apply');
     
+    // Student Application History
+    Route::get('/dashboard/student/applications', [ApplicationController::class, 'studentApplications'])
+        ->middleware('role:student')
+        ->name('student.applications');
+    
     // Employer routes
     Route::middleware('role:employer')->group(function () {
         Route::get('/dashboard/employer/applicants', [ApplicationController::class, 'listApplicants'])->name('employer.applicants');
