@@ -61,15 +61,6 @@
             <p class="text-gray-600 mb-4">Xem báo cáo và thống kê hệ thống</p>
             <a href="{{ route('admin.reports.index') }}" class="text-red-600 hover:text-red-800 font-medium">Xem chi tiết →</a>
         </div>
-
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center mb-4">
-                <i class="fas fa-cog text-2xl text-gray-600 mr-3"></i>
-                <h2 class="text-lg font-semibold text-gray-900">Cài đặt hệ thống</h2>
-            </div>
-            <p class="text-gray-600 mb-4">Cấu hình và cài đặt hệ thống</p>
-            <a href="{{ route('admin.settings.index') }}" class="text-gray-600 hover:text-gray-800 font-medium">Xem chi tiết →</a>
-        </div>
     </div>
 </div>
 @endsection

@@ -32,9 +32,13 @@
     const jobsData = @json($jobsPerDay ?? []);
     const categoriesData = @json($jobsByCategory ?? []);
 
+    // Hàm trợ giúp để kiểm tra xem đối tượng có rỗng không
+    const isEmpty = (obj) => Object.keys(obj).length === 0;
+
     // Biểu đồ 1: Người dùng
-    if (document.getElementById('usersChart')) {
-        new Chart(document.getElementById('usersChart'), {
+    const usersChartEl = document.getElementById('usersChart');
+    if (usersChartEl && !isEmpty(usersData)) {
+        new Chart(usersChartEl, {
             type: 'line',
             data: {
                 labels: Object.keys(usersData),
@@ -49,8 +53,9 @@
     }
 
     // Biểu đồ 2: Tin đăng
-    if (document.getElementById('jobsChart')) {
-        new Chart(document.getElementById('jobsChart'), {
+    const jobsChartEl = document.getElementById('jobsChart');
+    if (jobsChartEl && !isEmpty(jobsData)) {
+        new Chart(jobsChartEl, {
             type: 'line',
             data: {
                 labels: Object.keys(jobsData),
@@ -65,8 +70,9 @@
     }
 
     // Biểu đồ 3: Danh mục
-    if (document.getElementById('categoriesChart')) {
-        new Chart(document.getElementById('categoriesChart'), {
+    const categoriesChartEl = document.getElementById('categoriesChart');
+    if (categoriesChartEl && !isEmpty(categoriesData)) {
+        new Chart(categoriesChartEl, {
             type: 'doughnut',
             data: {
                 labels: Object.keys(categoriesData),

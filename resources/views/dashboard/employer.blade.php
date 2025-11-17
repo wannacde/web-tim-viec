@@ -27,6 +27,20 @@
                     <div class="py-3 border-b border-gray-100 last:border-b-0">
                         <div class="flex justify-between items-start">
                             <div>
+                                <div class="flex items-center mb-2 space-x-2">
+                                    @if($job->is_featured)
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                            <i class="fas fa-star text-yellow-500 mr-1"></i>
+                                            Nổi bật
+                                        </span>
+                                    @endif
+                                    @if($job->is_urgent)
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                            <i class="fas fa-fire text-red-500 mr-1"></i>
+                                            Gấp
+                                        </span>
+                                    @endif
+                                </div>
                                 <h3 class="font-medium text-gray-900">
                                     <a href="{{ route('employer.jobs.edit', $job) }}" class="hover:text-blue-600">
                                         {{ $job->title }}
@@ -86,7 +100,7 @@
     <!-- Quick Actions -->
     <div class="mt-8 bg-white rounded-lg shadow p-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Hành động nhanh</h2>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <a href="{{ route('employer.jobs.index') }}" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
                 <i class="fas fa-briefcase text-blue-600 mr-3"></i>
                 <span>Quản lý tin đăng</span>
@@ -98,10 +112,6 @@
             <a href="{{ route('company.edit') }}" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
                 <i class="fas fa-building text-purple-600 mr-3"></i>
                 <span>Thông tin công ty</span>
-            </a>
-            <a href="{{ route('admin.reports.index') }}" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
-                <i class="fas fa-chart-bar text-orange-600 mr-3"></i>
-                <span>Báo cáo thống kê</span>
             </a>
         </div>
     </div>

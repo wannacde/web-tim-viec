@@ -5,6 +5,12 @@
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-gray-900">Quản lý người dùng</h1>
     </div>
+    
+    <div class="mb-6">
+        <a href="{{ route('dashboard') }}" class="text-sm text-indigo-600 hover:text-indigo-900">
+            &larr; Quay lại Dashboard
+        </a>
+    </div>
 
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">{{ session('success') }}</div>

@@ -3,6 +3,12 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <h1 class="text-3xl font-bold text-gray-900 mb-8">Quản lý việc làm</h1>
+    
+    <div class="mb-6">
+        <a href="{{ route('dashboard') }}" class="text-sm text-indigo-600 hover:text-indigo-900">
+            &larr; Quay lại Dashboard
+        </a>
+    </div>
 
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">{{ session('success') }}</div>
