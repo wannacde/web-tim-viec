@@ -35,9 +35,6 @@
                         <a href="{{ route('jobs.index') }}" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
                             <i class="fas fa-search mr-2"></i>Tìm việc
                         </a>
-                        <a href="{{ route('companies.index') }}" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
-                            <i class="fas fa-building mr-2"></i>Công ty
-                        </a>
                         
                         @auth
                             <div class="flex items-center space-x-4">

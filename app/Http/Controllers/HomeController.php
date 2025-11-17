@@ -11,7 +11,7 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Job::with(['company', 'category', 'location'])
+        $query = Job::with(['user', 'category', 'location'])
             ->where('status', 'active')
             ->where('deadline', '>=', now());
 
@@ -38,7 +38,7 @@ class HomeController extends Controller
         $jobs = $query->latest()->paginate(12);
         $categories = Category::where('is_active', true)->get();
         $locations = Location::where('type', 'province')->where('is_active', true)->get();
-        $featuredJobs = Job::with(['company', 'category', 'location'])
+        $featuredJobs = Job::with(['user', 'category', 'location'])
             ->where('is_featured', true)
             ->where('status', 'active')
             ->limit(6)

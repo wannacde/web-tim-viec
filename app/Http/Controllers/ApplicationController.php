@@ -42,11 +42,11 @@ class ApplicationController extends Controller
 
     public function listApplicants()
     {
-        $company = Auth::user()->company;
+        $employer = Auth::user();
         
         $applications = Application::with(['user', 'job'])
-            ->whereHas('job', function($query) use ($company) {
-                $query->where('company_id', $company->id);
+            ->whereHas('job', function($query) use ($employer) {
+                $query->where('user_id', $employer->id);
             })
             ->latest()
             ->paginate(20);
@@ -61,7 +61,7 @@ class ApplicationController extends Controller
         ]);
 
         // Verify employer owns this application's job
-        if ($application->job->company_id !== Auth::user()->company->id) {
+        if ($application->job->user_id !== Auth::id()) {
             abort(403);
         }
 

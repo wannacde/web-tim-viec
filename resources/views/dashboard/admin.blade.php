@@ -8,10 +8,9 @@
     </div>
 
     <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <x-stat-card title="Tổng việc làm" :value="$stats['total_jobs']" icon="fas fa-briefcase" color="blue" />
         <x-stat-card title="Tổng người dùng" :value="$stats['total_users']" icon="fas fa-users" color="green" />
-        <x-stat-card title="Tổng công ty" :value="$stats['total_companies']" icon="fas fa-building" color="purple" />
         <x-stat-card title="Tổng ứng tuyển" :value="$stats['total_applications']" icon="fas fa-file-alt" color="yellow" />
     </div>
 
@@ -33,15 +32,6 @@
             </div>
             <p class="text-gray-600 mb-4">Duyệt và quản lý các tin tuyển dụng</p>
             <a href="{{ route('admin.jobs.index') }}" class="text-green-600 hover:text-green-800 font-medium">Xem chi tiết →</a>
-        </div>
-
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center mb-4">
-                <i class="fas fa-building text-2xl text-purple-600 mr-3"></i>
-                <h2 class="text-lg font-semibold text-gray-900">Quản lý công ty</h2>
-            </div>
-            <p class="text-gray-600 mb-4">Xác minh và quản lý thông tin công ty</p>
-            <a href="{{ route('admin.companies.index') }}" class="text-purple-600 hover:text-purple-800 font-medium">Xem chi tiết →</a>
         </div>
 
         <div class="bg-white rounded-lg shadow p-6">

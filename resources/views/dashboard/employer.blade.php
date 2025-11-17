@@ -100,7 +100,7 @@
     <!-- Quick Actions -->
     <div class="mt-8 bg-white rounded-lg shadow p-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Hành động nhanh</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <a href="{{ route('employer.jobs.index') }}" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
                 <i class="fas fa-briefcase text-blue-600 mr-3"></i>
                 <span>Quản lý tin đăng</span>
@@ -108,10 +108,6 @@
             <a href="{{ route('employer.applicants') }}" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
                 <i class="fas fa-users text-green-600 mr-3"></i>
                 <span>Quản lý ứng viên</span>
-            </a>
-            <a href="{{ route('company.edit') }}" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
-                <i class="fas fa-building text-purple-600 mr-3"></i>
-                <span>Thông tin công ty</span>
             </a>
         </div>
     </div>

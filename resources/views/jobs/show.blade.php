@@ -11,7 +11,7 @@
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $job->title }}</h1>
-                            <p class="text-xl text-gray-600">{{ $job->company->name }}</p>
+                            <p class="text-xl text-gray-600">{{ $job->user->company_name ?? $job->user->name }}</p>
                         </div>
                         <div class="flex space-x-2">
                             @if($job->is_featured)
@@ -138,23 +138,23 @@
                 <h3 class="text-lg font-semibold mb-4">Thông tin công ty</h3>
                 <div class="space-y-3">
                     <div>
-                        <h4 class="font-medium">{{ $job->company->name }}</h4>
-                        @if($job->company->description)
-                            <p class="text-gray-600 text-sm mt-2">{{ Str::limit($job->company->description, 150) }}</p>
+                        <h4 class="font-medium">{{ $job->user->company_name ?? $job->user->name }}</h4>
+                        @if($job->user->company_description)
+                            <p class="text-gray-600 text-sm mt-2">{{ Str::limit($job->user->company_description, 150) }}</p>
                         @endif
                     </div>
                     
-                    @if($job->company->address)
+                    @if($job->user->company_address)
                     <div class="flex items-start">
                         <i class="fas fa-map-marker-alt text-gray-400 mr-2 mt-1"></i>
-                        <span class="text-sm text-gray-600">{{ $job->company->address }}</span>
+                        <span class="text-sm text-gray-600">{{ $job->user->company_address }}</span>
                     </div>
                     @endif
                     
-                    @if($job->company->website)
+                    @if($job->user->company_website)
                     <div class="flex items-center">
                         <i class="fas fa-globe text-gray-400 mr-2"></i>
-                        <a href="{{ $job->company->website }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+                        <a href="{{ $job->user->company_website }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
                             Website
                         </a>
                     </div>
@@ -176,7 +176,7 @@
                             {{ Str::limit($relatedJob->title, 50) }}
                         </a>
                     </h3>
-                    <p class="text-gray-600 text-sm mb-2">{{ $relatedJob->company->name }}</p>
+                    <p class="text-gray-600 text-sm mb-2">{{ $relatedJob->user->company_name ?? $relatedJob->user->name }}</p>
                     <p class="text-gray-500 text-xs">{{ number_format($relatedJob->salary_min) }} - {{ number_format($relatedJob->salary_max) }} VNĐ</p>
                 </div>
             @endforeach

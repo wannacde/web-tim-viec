@@ -26,11 +26,10 @@ class UserSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        // Employer users và companies
-        $locationIds = DB::table('locations')->where('type', 'province')->pluck('id')->toArray();
-        
+        // Employer users
         for ($i = 1; $i <= 10; $i++) {
-            $employerId = DB::table('users')->insertGetId([
+            $companyName = $faker->company;
+            DB::table('users')->insert([
                 'name' => $faker->name,
                 'email' => "employer{$i}@example.com",
                 'phone' => $faker->phoneNumber,
@@ -38,24 +37,12 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'bio' => $faker->text(200),
-                'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            // Tạo company cho employer
-            $companyName = $faker->company;
-            DB::table('companies')->insert([
-                'user_id' => $employerId,
-                'name' => $companyName,
-                'slug' => \Illuminate\Support\Str::slug($companyName . '-' . $employerId),
-                'description' => $faker->text(500),
-                'email' => $faker->companyEmail,
-                'phone' => $faker->phoneNumber,
-                'address' => $faker->address,
-                'location_id' => $faker->randomElement($locationIds),
-                'size' => $faker->randomElement(['1-10', '11-50', '51-200', '201-500', '500+']),
+                'company_name' => $companyName,
+                'company_description' => $faker->text(500),
+                'company_website' => $faker->url,
+                'company_address' => $faker->address,
                 'is_verified' => $faker->boolean(80),
+                'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

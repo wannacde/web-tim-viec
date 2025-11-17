@@ -14,7 +14,7 @@ class JobController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Job::with(['company', 'category', 'location'])
+        $query = Job::with(['user', 'category', 'location'])
             ->where('status', 'active')
             ->where('deadline', '>', now());
 
@@ -24,8 +24,8 @@ class JobController extends Controller
             $query->where(function($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
                   ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhereHas('company', function($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%");
+                  ->orWhereHas('user', function($q) use ($search) {
+                      $q->where('company_name', 'like', "%{$search}%");
                   });
             });
         }
@@ -79,7 +79,7 @@ class JobController extends Controller
     public function show(Job $job)
     {
         $job->increment('views');
-        $job->load(['company', 'category', 'location']);
+        $job->load(['user', 'category', 'location']);
         
         $relatedJobs = Job::where('category_id', $job->category_id)
             ->where('id', '!=', $job->id)
@@ -122,8 +122,8 @@ class JobController extends Controller
     // Employer job management methods
     public function employerIndex()
     {
-        $company = Auth::user()->company;
-        $jobs = Job::where('company_id', $company->id)
+        $employer = Auth::user();
+        $jobs = Job::where('user_id', $employer->id)
             ->with(['category', 'location'])
             ->withCount('applications')
             ->latest()
@@ -160,7 +160,7 @@ class JobController extends Controller
         ]);
 
         Job::create([
-            'company_id' => Auth::user()->company->id,
+            'user_id' => Auth::id(),
             'title' => $request->title,
             'slug' => Str::slug($request->title . '-' . time()),
             'category_id' => $request->category_id,
@@ -185,7 +185,7 @@ class JobController extends Controller
     public function edit(Job $job)
     {
         // Verify ownership
-        if ($job->company_id !== Auth::user()->company->id) {
+        if ($job->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -198,7 +198,7 @@ class JobController extends Controller
     public function update(Request $request, Job $job)
     {
         // Verify ownership
-        if ($job->company_id !== Auth::user()->company->id) {
+        if ($job->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -245,7 +245,7 @@ class JobController extends Controller
     public function destroy(Job $job)
     {
         // Verify ownership
-        if ($job->company_id !== Auth::user()->company->id) {
+        if ($job->user_id !== Auth::id()) {
             abort(403);
         }
 

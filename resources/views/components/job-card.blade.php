@@ -21,13 +21,13 @@
                     {{ $job->title }}
                 </a>
             </h3>
-            <p class="text-gray-600 font-medium">{{ $job->company->name }}</p>
+            <p class="text-gray-600 font-medium">{{ $job->user ? ($job->user->company_name ?? $job->user->name) : 'N/A' }}</p>
         </div>
         <div class="w-16 h-16 rounded-2xl flex items-center justify-center overflow-hidden {{ $featured ? 'bg-gradient-to-br from-blue-500 to-purple-600' : 'bg-gradient-to-br from-gray-400 to-gray-600' }}">
-            @if($job->company->logo)
-                <img src="{{ Storage::url($job->company->logo) }}" alt="{{ $job->company->name }} logo" class="w-full h-full object-cover">
+            @if($job->user && $job->user->company_logo)
+                <img src="{{ Storage::url($job->user->company_logo) }}" alt="{{ $job->user ? ($job->user->company_name ?? $job->user->name) : 'Company' }} logo" class="w-full h-full object-cover">
             @else
-                <span class="font-bold text-white text-xl">{{ substr($job->company->name, 0, 1) }}</span>
+                <span class="font-bold text-white text-xl">{{ $job->user ? substr($job->user->company_name ?? $job->user->name, 0, 1) : '?' }}</span>
             @endif
         </div>
     </div>

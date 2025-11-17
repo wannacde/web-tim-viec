@@ -13,7 +13,7 @@ class JobSeeder extends Seeder
     {
         $faker = Faker::create('vi_VN');
         
-        $companyIds = DB::table('companies')->pluck('id')->toArray();
+        $employerIds = DB::table('users')->where('role', 'employer')->pluck('id')->toArray();
         $categoryIds = DB::table('categories')->pluck('id')->toArray();
         $locationIds = DB::table('locations')->pluck('id')->toArray();
 
@@ -41,7 +41,7 @@ class JobSeeder extends Seeder
             $salaryMax = $salaryMin + $faker->numberBetween(10, 30) * 1000;
             
             DB::table('jobs')->insert([
-                'company_id' => $faker->randomElement($companyIds),
+                'user_id' => $faker->randomElement($employerIds),
                 'category_id' => $faker->randomElement($categoryIds),
                 'location_id' => $faker->randomElement($locationIds),
                 'title' => $title,

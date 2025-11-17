@@ -5,11 +5,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ApplicationController;
-use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
-use App\Http\Controllers\Admin\CompanyController as AdminCompanyController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,10 +26,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
 Route::get('/jobs/{job:slug}', [JobController::class, 'show'])->name('jobs.show');
 Route::post('/jobs/{job}/save', [JobController::class, 'save'])->name('jobs.save');
-
-// Company routes
-Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index');
-Route::get('/companies/{company:slug}', [CompanyController::class, 'show'])->name('companies.show');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -60,10 +54,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard/employer/jobs/{job}/edit', [JobController::class, 'edit'])->name('employer.jobs.edit');
         Route::put('/dashboard/employer/jobs/{job}', [JobController::class, 'update'])->name('employer.jobs.update');
         Route::delete('/dashboard/employer/jobs/{job}', [JobController::class, 'destroy'])->name('employer.jobs.destroy');
-        
-        // Company management
-        Route::get('/dashboard/employer/company/edit', [CompanyController::class, 'edit'])->name('company.edit');
-        Route::put('/dashboard/employer/company', [CompanyController::class, 'update'])->name('company.update');
     });
     
     // Admin routes
@@ -85,9 +75,6 @@ Route::middleware('auth')->group(function () {
         // Job management
         Route::get('/jobs', [AdminJobController::class, 'index'])->name('jobs.index');
         Route::delete('/jobs/{job}', [AdminJobController::class, 'destroy'])->name('jobs.destroy');
-        
-        // Company management
-        Route::resource('companies', AdminCompanyController::class)->except(['create', 'store', 'show']);
         
         // Reports
         Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');

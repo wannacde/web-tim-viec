@@ -19,7 +19,9 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'phone', 'role', 'password', 'avatar', 'bio',
-        'date_of_birth', 'gender', 'address', 'is_active', 'last_login_at'
+        'date_of_birth', 'gender', 'address', 'is_active', 'last_login_at',
+        'headline', 'skills', 'education', 'experience',
+        'company_name', 'company_logo', 'company_description', 'company_website', 'company_address', 'is_verified'
     ];
 
     /**
@@ -43,11 +45,14 @@ class User extends Authenticatable
         'date_of_birth' => 'date',
         'is_active' => 'boolean',
         'last_login_at' => 'datetime',
+        'skills' => 'array',
+        'education' => 'array',
+        'experience' => 'array',
     ];
 
-    public function company()
+    public function jobs()
     {
-        return $this->hasOne(Company::class);
+        return $this->hasMany(Job::class);
     }
 
     public function applications()

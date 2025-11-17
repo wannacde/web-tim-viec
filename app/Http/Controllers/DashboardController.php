@@ -33,13 +33,13 @@ class DashboardController extends Controller
             'pending_applications' => Application::where('user_id', $user->id)->where('status', 'pending')->count(),
         ];
 
-        $recentApplications = Application::with(['job.company'])
+        $recentApplications = Application::with(['job.user'])
             ->where('user_id', $user->id)
             ->latest()
             ->limit(5)
             ->get();
 
-        $savedJobs = SavedJob::with(['job.company', 'job.category'])
+        $savedJobs = SavedJob::with(['job.user', 'job.category'])
             ->where('user_id', $user->id)
             ->latest()
             ->limit(5)
@@ -51,32 +51,27 @@ class DashboardController extends Controller
     private function employerDashboard()
     {
         $user = Auth::user();
-        $company = $user->company;
-        
-        if (!$company) {
-            return redirect()->route('company.setup');
-        }
 
         $stats = [
-            'total_jobs' => Job::where('company_id', $company->id)->count(),
-            'active_jobs' => Job::where('company_id', $company->id)->where('status', 'active')->count(),
-            'total_applications' => Application::whereHas('job', function($q) use ($company) {
-                $q->where('company_id', $company->id);
+            'total_jobs' => Job::where('user_id', $user->id)->count(),
+            'active_jobs' => Job::where('user_id', $user->id)->where('status', 'active')->count(),
+            'total_applications' => Application::whereHas('job', function($q) use ($user) {
+                $q->where('user_id', $user->id);
             })->count(),
-            'pending_applications' => Application::whereHas('job', function($q) use ($company) {
-                $q->where('company_id', $company->id);
+            'pending_applications' => Application::whereHas('job', function($q) use ($user) {
+                $q->where('user_id', $user->id);
             })->where('status', 'pending')->count(),
         ];
 
-        $recentJobs = Job::where('company_id', $company->id)
+        $recentJobs = Job::where('user_id', $user->id)
             ->withCount('applications')
             ->latest()
             ->limit(5)
             ->get();
 
         $recentApplications = Application::with(['user', 'job'])
-            ->whereHas('job', function($q) use ($company) {
-                $q->where('company_id', $company->id);
+            ->whereHas('job', function($q) use ($user) {
+                $q->where('user_id', $user->id);
             })
             ->latest()
             ->limit(5)
@@ -90,7 +85,7 @@ class DashboardController extends Controller
         $stats = [
             'total_jobs' => Job::count(),
             'total_users' => \App\Models\User::count(),
-            'total_companies' => \App\Models\Company::count(),
+            'total_companies' => \App\Models\User::where('role', 'employer')->count(),
             'total_applications' => Application::count(),
         ];
 

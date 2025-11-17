@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Job extends Model
 {
     protected $fillable = [
-        'company_id', 'category_id', 'location_id', 'title', 'slug',
+        'user_id', 'category_id', 'location_id', 'title', 'slug',
         'description', 'requirements', 'benefits', 'salary_min', 'salary_max',
         'salary_type', 'work_type', 'work_schedule', 'experience_level',
         'positions', 'status', 'deadline', 'views', 'is_featured', 'is_urgent'
@@ -25,9 +25,9 @@ class Job extends Model
         'is_urgent' => 'boolean',
     ];
 
-    public function company(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(User::class);
     }
 
     public function category(): BelongsTo

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Company;
+
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\Registered;
@@ -46,13 +46,10 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Tạo company cho employer
+        // Gán tên công ty mặc định khi đăng ký
         if ($request->role === 'employer') {
-            Company::create([
-                'user_id' => $user->id,
-                'name' => $request->name . ' Company',
-                'slug' => Str::slug($request->name . '-company-' . $user->id),
-            ]);
+            $user->company_name = $request->name; // Dùng tên người đăng ký làm tên công ty mặc định
+            $user->save();
         }
 
         event(new Registered($user));

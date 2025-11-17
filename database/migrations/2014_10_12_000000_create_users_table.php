@@ -17,6 +17,14 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->enum('role', ['student', 'employer', 'admin'])->default('student');
+            // Bắt đầu thêm các cột cho Employer
+            $table->string('company_name')->nullable()->after('role');
+            $table->string('company_logo')->nullable()->after('company_name');
+            $table->text('company_description')->nullable()->after('company_logo');
+            $table->string('company_website')->nullable()->after('company_description');
+            $table->string('company_address')->nullable()->after('company_website');
+            $table->boolean('is_verified')->default(false)->after('company_address');
+            // Kết thúc thêm cột
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('avatar')->nullable();
