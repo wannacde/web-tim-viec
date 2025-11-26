@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-6"><a href="{{ route('admin.categories.index') }}" class="flex items-center text-gray-600 hover:text-blue-600 transition-colors"><i class="fas fa-arrow-left mr-2"></i> Quay lại</a></div>
     <h1 class="text-3xl font-bold text-gray-900 mb-8">Thêm danh mục mới</h1>
 
     <form action="{{ route('admin.categories.store') }}" method="POST" class="bg-white shadow rounded-lg p-6">

@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-6"><a href="{{ route('employer.jobs.index') }}" class="flex items-center text-gray-600 hover:text-blue-600 transition-colors"><i class="fas fa-arrow-left mr-2"></i> Quay lại</a></div>
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900">Đăng tin tuyển dụng</h1>
         <p class="text-gray-600">Tạo tin tuyển dụng mới để tìm ứng viên phù hợp</p>

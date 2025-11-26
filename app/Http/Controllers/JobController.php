@@ -197,9 +197,8 @@ class JobController extends Controller
 
     public function update(Request $request, Job $job)
     {
-        // Verify ownership
-        if ($job->user_id !== Auth::id()) {
-            abort(403);
+        if (Auth::user()->role !== 'admin' && $job->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
         }
 
         $request->validate([
@@ -244,12 +243,13 @@ class JobController extends Controller
 
     public function destroy(Job $job)
     {
-        // Verify ownership
-        if ($job->user_id !== Auth::id()) {
-            abort(403);
+        if (Auth::user()->role !== 'admin' && $job->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
         }
 
         $job->delete();
         return redirect()->route('employer.jobs.index')->with('success', 'Xóa tin thành công!');
+    }
+}ss', 'Xóa tin thành công!');
     }
 }
