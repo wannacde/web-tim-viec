@@ -250,6 +250,4 @@ class JobController extends Controller
         $job->delete();
         return redirect()->route('employer.jobs.index')->with('success', 'Xóa tin thành công!');
     }
-}ss', 'Xóa tin thành công!');
-    }
 }
