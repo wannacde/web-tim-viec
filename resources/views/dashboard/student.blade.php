@@ -25,7 +25,7 @@
                     <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
                         <div>
                             <h3 class="font-medium text-gray-900">{{ $application->job->title }}</h3>
-                            <p class="text-sm text-gray-600">{{ $application->job->company->name }}</p>
+                            <p class="text-sm text-gray-600">{{ $application->job->user ? ($application->job->user->company_name ?? $application->job->user->name) : 'N/A' }}</p>
                             <p class="text-xs text-gray-500">{{ $application->created_at->diffForHumans() }}</p>
                         </div>
                         <span class="px-2 py-1 text-xs rounded-full 
@@ -55,7 +55,7 @@
                                 {{ $savedJob->job->title }}
                             </a>
                         </h3>
-                        <p class="text-sm text-gray-600">{{ $savedJob->job->company->name }}</p>
+                        <p class="text-sm text-gray-600">{{ $savedJob->job->user ? ($savedJob->job->user->company_name ?? $savedJob->job->user->name) : 'N/A' }}</p>
                         <div class="flex items-center justify-between mt-2">
                             <span class="text-xs text-gray-500">{{ $savedJob->created_at->diffForHumans() }}</span>
                             <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">

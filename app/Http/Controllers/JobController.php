@@ -149,8 +149,8 @@ class JobController extends Controller
             'description' => 'required|string',
             'requirements' => 'nullable|string',
             'benefits' => 'nullable|string',
-            'salary_min' => 'required|numeric|min:0',
-            'salary_max' => 'required|numeric|gte:salary_min',
+            'salary_min' => 'required|numeric|min:0|max:999999999',
+            'salary_max' => 'required|numeric|gte:salary_min|max:999999999',
             'salary_type' => 'required|in:hourly,daily,weekly,monthly',
             'work_type' => 'required|in:online,offline,hybrid',
             'work_schedule' => 'required|array',
@@ -209,14 +209,14 @@ class JobController extends Controller
             'description' => 'required|string',
             'requirements' => 'nullable|string',
             'benefits' => 'nullable|string',
-            'salary_min' => 'required|numeric|min:0',
-            'salary_max' => 'required|numeric|gte:salary_min',
+            'salary_min' => 'required|numeric|min:0|max:999999999',
+            'salary_max' => 'required|numeric|gte:salary_min|max:999999999',
             'salary_type' => 'required|in:hourly,daily,weekly,monthly',
             'work_type' => 'required|in:online,offline,hybrid',
             'work_schedule' => 'required|array',
             'experience_level' => 'required|in:no_experience,under_1_year,1_3_years,over_3_years',
             'positions' => 'required|integer|min:1',
-            'deadline' => 'required|date|after:today',
+            'deadline' => 'required|date|after_or_equal:today',
             'status' => 'required|in:draft,active,paused,expired,closed'
         ]);
 

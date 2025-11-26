@@ -44,16 +44,16 @@
             </div>
             
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Mức lương tối thiểu *</label>
-                <input type="number" name="salary_min" value="{{ old('salary_min', $job->salary_min) }}" required min="0"
-                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Mức lương tối thiểu * (tối đa 999,999,999 VNĐ)</label>
+                <input type="number" name="salary_min" value="{{ old('salary_min', $job->salary_min) }}" required min="0" max="999999999"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 salary-input">
                 @error('salary_min')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Mức lương tối đa *</label>
-                <input type="number" name="salary_max" value="{{ old('salary_max', $job->salary_max) }}" required min="0"
-                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Mức lương tối đa * (tối đa 999,999,999 VNĐ)</label>
+                <input type="number" name="salary_max" value="{{ old('salary_max', $job->salary_max) }}" required min="0" max="999999999"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 salary-input">
                 @error('salary_max')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             
@@ -76,6 +76,31 @@
                     <option value="hybrid" {{ old('work_type', $job->work_type) == 'hybrid' ? 'selected' : '' }}>Kết hợp</option>
                 </select>
                 @error('work_type')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Kinh nghiệm *</label>
+                <select name="experience_level" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="no_experience" {{ old('experience_level', $job->experience_level) == 'no_experience' ? 'selected' : '' }}>Không yêu cầu</option>
+                    <option value="under_1_year" {{ old('experience_level', $job->experience_level) == 'under_1_year' ? 'selected' : '' }}>Dưới 1 năm</option>
+                    <option value="1_3_years" {{ old('experience_level', $job->experience_level) == '1_3_years' ? 'selected' : '' }}>1-3 năm</option>
+                    <option value="over_3_years" {{ old('experience_level', $job->experience_level) == 'over_3_years' ? 'selected' : '' }}>Trên 3 năm</option>
+                </select>
+                @error('experience_level')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Số lượng tuyển *</label>
+                <input type="number" name="positions" value="{{ old('positions', $job->positions) }}" required min="1"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                @error('positions')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Hạn ứng tuyển *</label>
+                <input type="date" name="deadline" value="{{ old('deadline', $job->deadline->format('Y-m-d')) }}" required
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                @error('deadline')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             
             <div>
@@ -137,4 +162,65 @@
         </div>
     </form>
 </div>
+
+<!-- Popup Modal -->
+<div id="salaryWarningModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 max-w-md mx-4">
+        <div class="flex items-center mb-4">
+            <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.962-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">Giá trị quá lớn!</h3>
+            </div>
+        </div>
+        <div class="mb-4">
+            <p class="text-sm text-gray-700">
+                Mức lương không được vượt quá 999,999,999 VNĐ. Vui lòng nhập lại giá trị hợp lệ.
+            </p>
+        </div>
+        <div class="flex justify-end">
+            <button type="button" onclick="closeSalaryModal()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                Đã hiểu
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function showSalaryModal() {
+    document.getElementById('salaryWarningModal').classList.remove('hidden');
+    document.getElementById('salaryWarningModal').classList.add('flex');
+}
+
+function closeSalaryModal() {
+    document.getElementById('salaryWarningModal').classList.add('hidden');
+    document.getElementById('salaryWarningModal').classList.remove('flex');
+}
+
+// Add event listeners to salary inputs
+document.addEventListener('DOMContentLoaded', function() {
+    const salaryInputs = document.querySelectorAll('.salary-input');
+    
+    salaryInputs.forEach(function(input) {
+        input.addEventListener('input', function() {
+            const value = parseInt(this.value);
+            if (value > 999999999) {
+                this.value = '';
+                showSalaryModal();
+            }
+        });
+        
+        input.addEventListener('blur', function() {
+            const value = parseInt(this.value);
+            if (value > 999999999) {
+                this.value = '';
+                showSalaryModal();
+            }
+        });
+    });
+});
+</script>
 @endsection

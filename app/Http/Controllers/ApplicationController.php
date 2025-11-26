@@ -32,7 +32,7 @@ class ApplicationController extends Controller
         Application::create([
             'job_id' => $job->id,
             'user_id' => Auth::id(),
-            'cv_file' => $cvPath,
+            'cv_path' => $cvPath,
             'cover_letter' => $request->cover_letter,
             'status' => 'pending'
         ]);
