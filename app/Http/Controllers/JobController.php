@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
+
 class JobController extends Controller
 {
     public function index(Request $request)
@@ -122,6 +123,10 @@ class JobController extends Controller
     // Employer job management methods
     public function employerIndex()
     {
+    if (Auth::user()->role !== 'employer') {
+        abort(403);
+    }
+    {
         $employer = Auth::user();
         $jobs = Job::where('user_id', $employer->id)
             ->with(['category', 'location'])
@@ -131,6 +136,7 @@ class JobController extends Controller
 
         return view('dashboard.employer.jobs.index', compact('jobs'));
     }
+}
 
     public function create()
     {

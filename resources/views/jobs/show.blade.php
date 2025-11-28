@@ -104,6 +104,10 @@
                                     <i class="fas fa-paper-plane mr-2"></i>Ứng tuyển ngay
                                 </button>
                             @endif
+                            <a href="{{ route('messages.show', $job->user_id) }}" 
+                               class="w-full bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 mb-3 block text-center">
+                                <i class="fas fa-comments mr-2"></i>Chat với nhà tuyển dụng
+                            </a>
                         @endif
                         <button onclick="saveJob({{ $job->id }})" 
                                 class="w-full border border-gray-300 text-gray-700 py-2 px-6 rounded-lg hover:bg-gray-50 save-btn">

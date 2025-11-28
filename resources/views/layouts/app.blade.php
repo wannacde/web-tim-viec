@@ -41,6 +41,15 @@
                                 <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
                                     <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                                 </a>
+                                <a href="{{ route('messages.index') }}" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 relative">
+                                    <i class="fas fa-comments mr-2"></i>Messages
+                                    @php
+                                        $unreadCount = Auth::check() ? \App\Models\Message::where('receiver_id', Auth::id())->where('is_read', false)->count() : 0;
+                                    @endphp
+                                    @if($unreadCount > 0)
+                                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ $unreadCount }}</span>
+                                    @endif
+                                </a>
                                 <div class="flex items-center space-x-3">
                                     <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                                         {{ substr(Auth::user()->name, 0, 1) }}

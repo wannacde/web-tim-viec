@@ -60,7 +60,10 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                             <div class="flex items-center space-x-2">
-                                <a href="{{ Storage::url($application->cv_path) }}" target="_blank" class="text-blue-600 hover:text-blue-900 font-medium">Tải CV</a>
+                                <a href="{{ Storage::url($application->cv_file) }}" target="_blank" class="text-blue-600 hover:text-blue-900 font-medium">Tải CV</a>
+                                <a href="{{ route('messages.show', $application->user_id) }}" class="text-green-600 hover:text-green-900 font-medium">
+                                    <i class="fas fa-comments mr-1"></i>Nhắn tin
+                                </a>
                                 <form action="{{ route('applications.updateStatus', $application) }}" method="POST" class="inline">
                                     @csrf @method('PATCH')
                                     <select name="status" onchange="this.form.submit()" class="text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500">
