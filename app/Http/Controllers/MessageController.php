@@ -98,7 +98,14 @@ class MessageController extends Controller
             'is_read' => false
         ]);
 
+        $message->load('sender');
         broadcast(new \App\Events\MessageSent($message))->toOthers();
+        
+        // Update unread count for receiver
+        $unreadCount = \App\Models\Message::where('receiver_id', $request->receiver_id)
+                                          ->where('is_read', false)
+                                          ->count();
+        broadcast(new \App\Events\UnreadCountUpdated($request->receiver_id, $unreadCount));
 
         return redirect()->route('messages.show', $request->receiver_id)
                         ->with('success', 'Message sent successfully!');

@@ -47,7 +47,7 @@
                                         $unreadCount = Auth::check() ? \App\Models\Message::where('receiver_id', Auth::id())->where('is_read', false)->count() : 0;
                                     @endphp
                                     @if($unreadCount > 0)
-                                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ $unreadCount }}</span>
+                                        <span class="unread-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ $unreadCount }}</span>
                                     @endif
                                 </a>
                                 <div class="flex items-center space-x-3">
@@ -176,6 +176,36 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    @auth
+    <script type="module">
+        // Real-time notification updates
+        window.Echo.private(`notifications.{{ Auth::id() }}`)
+            .listen('UnreadCountUpdated', (e) => {
+                const badge = document.querySelector('.unread-badge');
+                if (e.unread_count > 0) {
+                    if (badge) {
+                        badge.textContent = e.unread_count;
+                        badge.style.display = 'flex';
+                    } else {
+                        // Create badge if it doesn't exist
+                        const messagesLink = document.querySelector('a[href="{{ route('messages.index') }}"]');
+                        if (messagesLink) {
+                            const newBadge = document.createElement('span');
+                            newBadge.className = 'unread-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center';
+                            newBadge.textContent = e.unread_count;
+                            messagesLink.appendChild(newBadge);
+                        }
+                    }
+                } else {
+                    if (badge) {
+                        badge.style.display = 'none';
+                    }
+                }
+            });
+    </script>
+    @endauth
+    
     @stack('scripts')
 </body>
 </html>

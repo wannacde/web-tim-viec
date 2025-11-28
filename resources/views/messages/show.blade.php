@@ -91,10 +91,21 @@
     const currentUserId = {{ Auth::id() }};
     const otherUserId = {{ $user->id }};
     
+    console.log('Setting up Echo for user:', currentUserId);
+    console.log('Echo object:', window.Echo);
+    
     window.Echo.private(`chat.${currentUserId}`)
+        .subscribed(() => {
+            console.log('Successfully subscribed to chat channel');
+        })
+        .error((error) => {
+            console.error('Echo subscription error:', error);
+        })
         .listen('MessageSent', (e) => {
+            console.log('Message received:', e);
             // Check if message is from the current conversation
             if (e.sender_id === otherUserId) {
+                console.log('Message is from current conversation');
                 // Create new message bubble
                 const messageHtml = `
                     <div class="flex justify-start">
