@@ -50,12 +50,16 @@
                                         <span class="unread-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ $unreadCount }}</span>
                                     @endif
                                 </a>
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                                        {{ substr(Auth::user()->name, 0, 1) }}
-                                    </div>
-                                    <span class="text-gray-700 font-medium">{{ Auth::user()->name }}</span>
-                                </div>
+                                <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 transition-colors duration-200">
+                                    @if(Auth::user()->avatar)
+                                        <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
+                                    @else
+                                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                                            {{ substr(Auth::user()->name, 0, 1) }}
+                                        </div>
+                                    @endif
+                                    <span class="font-medium">{{ Auth::user()->name }}</span>
+                                </a>
                                 <form method="POST" action="{{ route('logout') }}" class="inline">
                                     @csrf
                                     <button type="submit" class="text-red-500 hover:text-red-700 font-medium transition-colors duration-200">
@@ -93,6 +97,9 @@
                     @auth
                         <a href="{{ route('dashboard') }}" class="block text-gray-700 hover:text-blue-600 font-medium">
                             <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                        </a>
+                        <a href="{{ route('profile.edit') }}" class="block text-gray-700 hover:text-blue-600 font-medium">
+                            <i class="fas fa-user mr-2"></i>Profile
                         </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

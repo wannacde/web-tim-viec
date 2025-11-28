@@ -86,7 +86,7 @@ class JobController extends Controller
             ->where('id', '!=', $job->id)
             ->where('status', 'active')
             ->limit(4)
-            ->get();
+           ->get();
 
         $isSaved = false;
         if (Auth::check()) {
@@ -140,6 +140,12 @@ class JobController extends Controller
 
     public function create()
     {
+        // Kiểm tra employer đã được xác thực chưa
+        if (Auth::user()->role === 'employer' && !Auth::user()->is_verified) {
+            return redirect()->route('employer.jobs.index')
+                ->with('error', 'Tài khoản của bạn chưa được xác thực. Vui lòng chờ admin phê duyệt.');
+        }
+
         $categories = Category::where('is_active', true)->get();
         $locations = Location::where('is_active', true)->get();
         
@@ -148,6 +154,12 @@ class JobController extends Controller
 
     public function store(Request $request)
     {
+        // Kiểm tra employer đã được xác thực chưa
+        if (Auth::user()->role === 'employer' && !Auth::user()->is_verified) {
+            return redirect()->route('employer.jobs.index')
+                ->with('error', 'Tài khoản của bạn chưa được xác thực. Vui lòng chờ admin phê duyệt để có thể đăng tin tuyển dụng.');
+        }
+
         $request->validate([
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',

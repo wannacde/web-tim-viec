@@ -15,10 +15,32 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
             'phone' => ['nullable', 'string', 'max:20'],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:1024'],
         ];
+
+        // Add employer-specific validation
+        if ($this->user()->role === 'employer') {
+            $rules = array_merge($rules, [
+                'company_name' => ['required', 'string', 'max:255'],
+                'company_website' => ['nullable', 'url', 'max:255'],
+                'company_address' => ['nullable', 'string', 'max:255'],
+                'company_description' => ['nullable', 'string', 'max:2000'],
+                'company_logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:1024'],
+            ]);
+        }
+
+        // Add student-specific validation
+        if ($this->user()->role === 'student') {
+            $rules = array_merge($rules, [
+                'headline' => ['nullable', 'string', 'max:255'],
+                'bio' => ['nullable', 'string', 'max:1000'],
+            ]);
+        }
+
+        return $rules;
     }
 }

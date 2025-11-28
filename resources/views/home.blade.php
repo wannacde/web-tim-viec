@@ -157,6 +157,7 @@
     </div>
 </section>
 
+@guest
 <!-- CTA Section -->
 <section class="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -176,4 +177,5 @@
         </div>
     </div>
 </section>
+@endguest
 @endsection

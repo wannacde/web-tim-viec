@@ -36,6 +36,7 @@
                     <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Người dùng</th>
                     <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Vai trò</th>
                     <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Xác thực</th>
                     <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Hành động</th>
                 </tr>
             </thead>
@@ -62,6 +63,19 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            @if($user->role === 'employer')
+                                <form action="{{ route('admin.users.verify', $user) }}" method="POST" class="inline">
+                                    @csrf @method('PATCH')
+                                    <button type="submit" class="px-3 py-1 text-xs rounded-full font-medium transition-colors
+                                        {{ $user->is_verified ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200' }}">
+                                        {{ $user->is_verified ? 'Đã xác thực' : 'Chưa xác thực' }}
+                                    </button>
+                                </form>
+                            @else
+                                <span class="text-gray-400 text-xs">Không áp dụng</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                             <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600 hover:text-blue-900 font-medium mr-3">Sửa</a>
                             @if($user->role !== 'admin')
                                 <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline"
@@ -74,7 +88,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-12 text-center text-gray-500">
+                        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
                             Không có người dùng nào.
                         </td>
                     </tr>

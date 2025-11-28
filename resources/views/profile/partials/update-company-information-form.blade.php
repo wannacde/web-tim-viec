@@ -42,7 +42,7 @@
 
         <div>
             <label for="company_logo" class="block text-sm font-medium text-gray-700">Logo</label>
-            <input id="company_logo" name="company_logo" type="file" class="mt-1 block w-full" />
+            <input id="company_logo" name="company_logo" type="file" accept="image/jpeg,image/png,image/jpg" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
             @if ($user->company_logo)
                 <img src="{{ Storage::url($user->company_logo) }}" alt="Logo" class="mt-4 h-16 w-16 object-cover rounded-md">
             @endif

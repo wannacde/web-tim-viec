@@ -10,7 +10,7 @@ class JobController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Job::with(['company', 'category', 'location']);
+        $query = Job::with(['user', 'category', 'location']);
         
         if ($request->filled('status')) {
             $query->where('status', $request->status);

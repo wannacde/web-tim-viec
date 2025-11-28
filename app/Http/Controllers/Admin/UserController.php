@@ -61,4 +61,17 @@ class UserController extends Controller
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'Xóa người dùng thành công!');
     }
+
+    public function toggleVerify(User $user)
+    {
+        if ($user->role === 'employer') {
+            $user->is_verified = !$user->is_verified;
+            $user->save();
+            
+            $status = $user->is_verified ? 'đã được xác thực' : 'đã bỏ xác thực';
+            return back()->with('success', "Doanh nghiệp {$user->company_name} {$status}.");
+        }
+        
+        return back()->with('error', 'Chỉ có thể xác thực Nhà tuyển dụng.');
+    }
 }

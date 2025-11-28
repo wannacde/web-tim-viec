@@ -29,48 +29,27 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         
-        // Validated data (Name, Email, Phone)
+        // Fill validated data
         $user->fill($request->validated());
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
-        // Xử lý riêng cho Employer
-        if ($user->role === 'employer') {
-            $request->validate([
-                'company_name' => 'required|string|max:255',
-                'company_website' => 'nullable|url|max:255',
-                'company_address' => 'nullable|string|max:255',
-                'company_description' => 'nullable|string|max:2000',
-                'company_logo' => 'nullable|image|mimes:jpg,jpeg,png|max:1024',
-            ]);
-
-            $user->company_name = $request->input('company_name');
-            $user->company_website = $request->input('company_website');
-            $user->company_address = $request->input('company_address');
-            $user->company_description = $request->input('company_description');
-
-            if ($request->hasFile('company_logo')) {
-                // Xóa logo cũ nếu có
-                if ($user->company_logo) {
-                    Storage::disk('public')->delete($user->company_logo);
-                }
-                // Lưu logo mới
-                $path = $request->file('company_logo')->store('logos', 'public');
-                $user->company_logo = $path;
+        // Handle avatar upload
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar) {
+                Storage::disk('public')->delete($user->avatar);
             }
+            $user->avatar = $request->file('avatar')->store('avatars', 'public');
         }
 
-        // Xử lý riêng cho Student
-        if ($user->role === 'student') {
-            $request->validate([
-                'headline' => 'nullable|string|max:255',
-                'bio' => 'nullable|string|max:1000',
-            ]);
-
-            $user->headline = $request->headline;
-            $user->bio = $request->bio;
+        // Handle company logo upload for employers
+        if ($user->role === 'employer' && $request->hasFile('company_logo')) {
+            if ($user->company_logo) {
+                Storage::disk('public')->delete($user->company_logo);
+            }
+            $user->company_logo = $request->file('company_logo')->store('logos', 'public');
         }
 
         $user->save();
