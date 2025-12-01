@@ -38,7 +38,7 @@
         <div class="max-h-96 overflow-y-auto">
             <template x-for="notification in notifications" :key="notification.id">
                 <a :href="`/notifications/mark-read/${notification.id}`" 
-                   class="block p-5 hover:bg-blue-50 border-b border-gray-100 bg-blue-25 transition-colors duration-200">
+                   class="block px-4 py-3 hover:bg-blue-50 border-b border-gray-100 bg-blue-25 transition ease-in-out duration-150 break-words whitespace-normal">
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0 mt-1">
                             <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -46,8 +46,8 @@
                             </div>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <p class="text-base font-medium text-gray-900 leading-relaxed" x-text="notification.message"></p>
-                            <p class="text-sm text-gray-500 mt-2">Vừa xong</p>
+                            <p class="text-sm font-medium text-gray-900 leading-relaxed break-words whitespace-normal" x-text="notification.message"></p>
+                            <p class="text-xs text-gray-500 mt-1">Vừa xong</p>
                         </div>
                         <div class="flex-shrink-0">
                             <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
@@ -57,7 +57,7 @@
             </template>
             @forelse(Auth::user()->unreadNotifications->take(6) as $notification)
                 <a href="{{ route('notifications.read', $notification->id) }}" 
-                   class="block p-5 hover:bg-blue-50 border-b border-gray-100 bg-blue-25 transition-colors duration-200">
+                   class="block px-4 py-3 hover:bg-blue-50 border-b border-gray-100 bg-blue-25 transition ease-in-out duration-150 break-words whitespace-normal">
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0 mt-1">
                             <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -71,8 +71,8 @@
                             </div>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <p class="text-base font-medium text-gray-900 leading-relaxed">{{ $notification->data['message'] }}</p>
-                            <p class="text-sm text-gray-500 mt-2">{{ $notification->created_at->diffForHumans() }}</p>
+                            <p class="text-sm font-medium text-gray-900 leading-relaxed break-words whitespace-normal">{{ $notification->data['message'] }}</p>
+                            <p class="text-xs text-gray-500 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
                         </div>
                         <div class="flex-shrink-0">
                             <div class="w-3 h-3 bg-blue-500 rounded-full"></div>

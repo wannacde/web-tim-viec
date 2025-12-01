@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     
     // Notification routes
     Route::get('/notifications/mark-read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/mark-all-read', [MessageController::class, 'markAllRead'])->name('notifications.markAllRead');
     
     // Application routes
     Route::post('/jobs/{job}/apply', [ApplicationController::class, 'store'])->name('jobs.apply');
