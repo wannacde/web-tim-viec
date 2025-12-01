@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Job;
 use App\Models\Application;
+use App\Notifications\NewApplicationReceived;
+use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -29,13 +31,16 @@ class ApplicationController extends Controller
         // Store CV file
         $cvPath = $request->file('cv')->store('cvs', 'public');
 
-        Application::create([
+        $application = Application::create([
             'job_id' => $job->id,
             'user_id' => Auth::id(),
             'cv_file' => $cvPath,
             'cover_letter' => $request->cover_letter,
             'status' => 'pending'
         ]);
+
+        // Gửi thông báo cho nhà tuyển dụng
+        $job->user->notify(new NewApplicationReceived($application));
 
         return back()->with('success', 'Ứng tuyển thành công!');
     }
@@ -65,10 +70,17 @@ class ApplicationController extends Controller
             abort(403);
         }
 
+        $oldStatus = $application->status;
+        
         $application->update([
             'status' => $request->status,
             'reviewed_at' => now()
         ]);
+
+        // Gửi thông báo cho sinh viên nếu trạng thái thay đổi
+        if ($oldStatus !== $request->status) {
+            $application->user->notify(new ApplicationStatusUpdated($application));
+        }
 
         return back()->with('success', 'Cập nhật trạng thái thành công!');
     }
@@ -78,11 +90,13 @@ class ApplicationController extends Controller
      */
     public function studentApplications()
     {
-        $applications = Application::with(['job.company', 'job.category'])
+        $applications = Application::with(['job.user', 'job.category'])
             ->where('user_id', Auth::id())
             ->latest()
             ->paginate(15);
 
         return view('dashboard.student.applications', compact('applications'));
     }
+
+
 }

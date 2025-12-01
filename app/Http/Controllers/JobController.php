@@ -32,8 +32,9 @@ class JobController extends Controller
         }
 
         // Filter by category
-        if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
+        if ($request->filled('category') || $request->filled('category_id')) {
+            $categoryId = $request->filled('category_id') ? $request->category_id : $request->category;
+            $query->where('category_id', $categoryId);
         }
 
         // Filter by location

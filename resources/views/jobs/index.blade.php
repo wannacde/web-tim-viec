@@ -59,20 +59,20 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="flex md:grid-cols-3 gap-4">
                     <!-- Salary Range -->
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 w-full">
                         <input type="number" name="salary_min" value="{{ request('salary_min') }}" 
                                placeholder="Lương tối thiểu" 
-                               class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <input type="number" name="salary_max" value="{{ request('salary_max') }}" 
                                placeholder="Lương tối đa" 
-                               class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                               class="w-full px-2 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
 
                     <!-- Sort -->
                     <div>
-                        <select name="sort" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <select name="sort" class="w-[200px] px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Mới nhất</option>
                             <option value="salary_high" {{ request('sort') == 'salary_high' ? 'selected' : '' }}>Lương cao nhất</option>
                             <option value="salary_low" {{ request('sort') == 'salary_low' ? 'selected' : '' }}>Lương thấp nhất</option>
@@ -81,7 +81,7 @@
                     </div>
 
                     <!-- Buttons -->
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 flex-shrink-0">
                         <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium">
                             Tìm kiếm
                         </button>

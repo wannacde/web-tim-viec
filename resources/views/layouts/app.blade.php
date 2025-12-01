@@ -50,6 +50,15 @@
                                         <span class="unread-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ $unreadCount }}</span>
                                     @endif
                                 </a>
+                                <a href="{{ route('notifications.index') }}" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 relative">
+                                    <i class="fas fa-bell mr-2"></i>Thông báo
+                                    @php
+                                        $notificationCount = Auth::check() ? Auth::user()->unreadNotifications->count() : 0;
+                                    @endphp
+                                    @if($notificationCount > 0)
+                                        <span class="notification-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ $notificationCount }}</span>
+                                    @endif
+                                </a>
                                 <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 transition-colors duration-200">
                                     @if(Auth::user()->avatar)
                                         <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
@@ -188,6 +197,34 @@
     <script type="module">
         // Real-time notification updates
         window.Echo.private(`notifications.{{ Auth::id() }}`)
+            .notification((notification) => {
+                // Update notification badge
+                const notificationBadge = document.querySelector('.notification-badge');
+                const currentCount = notificationBadge ? parseInt(notificationBadge.textContent) || 0 : 0;
+                const newCount = currentCount + 1;
+                
+                if (notificationBadge) {
+                    notificationBadge.textContent = newCount;
+                    notificationBadge.style.display = 'flex';
+                } else {
+                    // Create badge if it doesn't exist
+                    const notificationLink = document.querySelector('a[href="{{ route('notifications.index') }}"]');
+                    if (notificationLink) {
+                        const newBadge = document.createElement('span');
+                        newBadge.className = 'notification-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center';
+                        newBadge.textContent = '1';
+                        notificationLink.appendChild(newBadge);
+                    }
+                }
+                
+                // Show browser notification if supported
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('Thông báo mới', {
+                        body: notification.data.message,
+                        icon: '/favicon.ico'
+                    });
+                }
+            })
             .listen('UnreadCountUpdated', (e) => {
                 const badge = document.querySelector('.unread-badge');
                 if (e.unread_count > 0) {
@@ -210,6 +247,11 @@
                     }
                 }
             });
+            
+        // Request notification permission
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
     </script>
     @endauth
     
