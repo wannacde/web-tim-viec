@@ -14,10 +14,10 @@ class UnreadCountUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $userId;
-    public $unreadCount;
+    public int $userId;
+    public int $unreadCount;
 
-    public function __construct($userId, $unreadCount)
+    public function __construct(int $userId, int $unreadCount)
     {
         $this->userId = $userId;
         $this->unreadCount = $unreadCount;

@@ -15,7 +15,7 @@ class MessageSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
+    public Message $message;
 
     public function __construct(Message $message)
     {
@@ -33,9 +33,9 @@ class MessageSent implements ShouldBroadcast
     {
         return [
             'id' => $this->message->id,
-            'message' => $this->message->message,
+            'message' => e($this->message->message),
             'sender_id' => $this->message->sender_id,
-            'sender_name' => $this->message->sender->name,
+            'sender_name' => e($this->message->sender?->name ?? 'Unknown User'),
             'created_at' => $this->message->created_at->format('H:i'),
         ];
     }

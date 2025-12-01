@@ -13,7 +13,7 @@ class NewApplicationReceived extends Notification implements ShouldBroadcastNow
 {
     use Queueable;
 
-    protected $application;
+    protected Application $application;
 
     /**
      * Create a new notification instance.
@@ -39,11 +39,11 @@ class NewApplicationReceived extends Notification implements ShouldBroadcastNow
     public function toBroadcast(object $notifiable): array
     {
         return [
-            'id' => $this->id ?? uniqid(),
+            'id' => $this->id ?? \Illuminate\Support\Str::uuid(),
             'type' => static::class,
             'data' => $this->toArray($notifiable),
             'created_at' => now()->toISOString(),
-            'created_at_human' => 'Vừa xong'
+            'created_at_human' => __('Just now')
         ];
     }
 
@@ -54,12 +54,15 @@ class NewApplicationReceived extends Notification implements ShouldBroadcastNow
      */
     public function toArray(object $notifiable): array
     {
+        $jobTitle = $this->application->job?->title ?? 'Unknown Job';
+        $userName = $this->application->user?->name ?? 'Unknown User';
+        
         return [
-            'message' => "Bạn có đơn ứng tuyển mới cho công việc '{$this->application->job->title}' từ {$this->application->user->name}",
+            'message' => "Bạn có đơn ứng tuyển mới cho công việc '" . e($jobTitle) . "' từ " . e($userName),
             'application_id' => $this->application->id,
             'job_id' => $this->application->job_id,
-            'student_name' => $this->application->user->name,
-            'job_title' => $this->application->job->title,
+            'student_name' => e($userName),
+            'job_title' => e($jobTitle),
             'url' => route('employer.applicants')
         ];
     }

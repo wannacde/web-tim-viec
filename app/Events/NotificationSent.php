@@ -14,10 +14,10 @@ class NotificationSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $userId;
-    public $notificationData;
+    public int $userId;
+    public array $notificationData;
 
-    public function __construct($userId, $notificationData)
+    public function __construct(int $userId, array $notificationData)
     {
         $this->userId = $userId;
         $this->notificationData = $notificationData;
@@ -32,6 +32,6 @@ class NotificationSent implements ShouldBroadcast
 
     public function broadcastWith(): array
     {
-        return $this->notificationData;
+        return is_array($this->notificationData) ? $this->notificationData : [];
     }
 }

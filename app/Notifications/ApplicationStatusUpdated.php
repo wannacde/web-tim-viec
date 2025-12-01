@@ -13,7 +13,7 @@ class ApplicationStatusUpdated extends Notification implements ShouldBroadcastNo
 {
     use Queueable;
 
-    protected $application;
+    protected Application $application;
 
     /**
      * Create a new notification instance.
@@ -39,11 +39,11 @@ class ApplicationStatusUpdated extends Notification implements ShouldBroadcastNo
     public function toBroadcast(object $notifiable): array
     {
         return [
-            'id' => $this->id ?? uniqid(),
+            'id' => $this->id ?? \Illuminate\Support\Str::uuid(),
             'type' => static::class,
             'data' => $this->toArray($notifiable),
             'created_at' => now()->toISOString(),
-            'created_at_human' => 'Vừa xong'
+            'created_at_human' => __('Just now')
         ];
     }
 
@@ -55,9 +55,9 @@ class ApplicationStatusUpdated extends Notification implements ShouldBroadcastNo
         $statusText = $this->getStatusText($this->application->status);
         
         return (new MailMessage)
-            ->subject('Cập nhật trạng thái đơn ứng tuyển - ' . $this->application->job->title)
+            ->subject('Cập nhật trạng thái đơn ứng tuyển - ' . e($this->application->job?->title ?? 'Unknown Job'))
             ->greeting('Chào ' . $notifiable->name . ',')
-            ->line("Đơn ứng tuyển của bạn cho công việc '{$this->application->job->title}' đã chuyển sang trạng thái: {$statusText}")
+            ->line("Đơn ứng tuyển của bạn cho công việc '" . e($this->application->job?->title ?? 'Unknown Job') . "' đã chuyển sang trạng thái: {$statusText}")
             ->action('Xem chi tiết', route('student.applications'))
             ->line('Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!');
     }
@@ -71,11 +71,13 @@ class ApplicationStatusUpdated extends Notification implements ShouldBroadcastNo
     {
         $statusText = $this->getStatusText($this->application->status);
         
+        $jobTitle = $this->application->job?->title ?? 'Unknown Job';
+        
         return [
-            'message' => "Trạng thái đơn ứng tuyển cho công việc '{$this->application->job->title}' đã chuyển thành: {$statusText}",
+            'message' => "Trạng thái đơn ứng tuyển cho công việc '" . e($jobTitle) . "' đã chuyển thành: {$statusText}",
             'application_id' => $this->application->id,
             'job_id' => $this->application->job_id,
-            'job_title' => $this->application->job->title,
+            'job_title' => e($jobTitle),
             'status' => $this->application->status,
             'status_text' => $statusText,
             'url' => route('student.applications')
@@ -85,7 +87,7 @@ class ApplicationStatusUpdated extends Notification implements ShouldBroadcastNo
     /**
      * Get status text in Vietnamese
      */
-    private function getStatusText($status)
+    private function getStatusText(string $status): string
     {
         $statusMap = [
             'pending' => 'Đang chờ duyệt',
