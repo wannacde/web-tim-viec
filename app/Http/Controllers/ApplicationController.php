@@ -78,7 +78,7 @@ class ApplicationController extends Controller
      */
     public function studentApplications()
     {
-        $applications = Application::with(['job.company', 'job.category'])
+        $applications = Application::with(['job.user', 'job.category'])
             ->where('user_id', Auth::id())
             ->latest()
             ->paginate(15);
