@@ -50,6 +50,7 @@
                                         <span class="unread-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ $unreadCount }}</span>
                                     @endif
                                 </a>
+                                <x-notification-bell />
                                 <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 transition-colors duration-200">
                                     @if(Auth::user()->avatar)
                                         <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="Avatar" class="w-8 h-8 rounded-full object-cover">

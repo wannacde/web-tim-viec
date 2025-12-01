@@ -19,6 +19,10 @@ class MessageController extends Controller
                              ->where('is_read', false)
                              ->count();
         
+        // Get notifications
+        $notifications = Auth::user()->notifications()->latest()->get();
+        $unreadNotificationCount = Auth::user()->unreadNotifications()->count();
+        
         // Get unique users with latest message
         $contacts = DB::table('messages')
             ->select('users.id', 'users.name', 'users.email', 'users.role', 
@@ -37,7 +41,7 @@ class MessageController extends Controller
             ->orderBy('last_message_time', 'desc')
             ->get();
 
-        return view('messages.index', compact('contacts', 'unreadCount'));
+        return view('messages.index', compact('contacts', 'unreadCount', 'notifications', 'unreadNotificationCount'));
     }
 
     public function show(User $user)

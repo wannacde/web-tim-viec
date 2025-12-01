@@ -7,6 +7,8 @@ use App\Models\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\NewApplicationNotification;
+use App\Notifications\ApplicationStatusNotification;
 
 class ApplicationController extends Controller
 {
@@ -36,6 +38,9 @@ class ApplicationController extends Controller
             'cover_letter' => $request->cover_letter,
             'status' => 'pending'
         ]);
+
+        // Send notification to employer
+        $job->user->notify(new NewApplicationNotification($job));
 
         return back()->with('success', 'Ứng tuyển thành công!');
     }
@@ -69,6 +74,9 @@ class ApplicationController extends Controller
             'status' => $request->status,
             'reviewed_at' => now()
         ]);
+
+        // Send notification to student
+        $application->user->notify(new ApplicationStatusNotification($application->job, $request->status));
 
         return back()->with('success', 'Cập nhật trạng thái thành công!');
     }
