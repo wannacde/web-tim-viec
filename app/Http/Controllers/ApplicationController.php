@@ -41,6 +41,23 @@ class ApplicationController extends Controller
 
         // Gửi thông báo cho nhà tuyển dụng
         $job->user->notify(new NewApplicationReceived($application));
+        
+        // Broadcast real-time notification
+        $notificationData = [
+            'id' => uniqid(),
+            'type' => 'NewApplicationReceived',
+            'data' => [
+                'message' => "Bạn có đơn ứng tuyển mới cho công việc '{$job->title}' từ " . Auth::user()->name,
+                'application_id' => $application->id,
+                'job_id' => $job->id,
+                'student_name' => Auth::user()->name,
+                'job_title' => $job->title,
+                'url' => route('employer.applicants')
+            ],
+            'created_at' => now()->toISOString(),
+            'created_at_human' => 'Vừa xong'
+        ];
+        broadcast(new \App\Events\NotificationSent($job->user_id, $notificationData));
 
         return back()->with('success', 'Ứng tuyển thành công!');
     }
@@ -80,6 +97,32 @@ class ApplicationController extends Controller
         // Gửi thông báo cho sinh viên nếu trạng thái thay đổi
         if ($oldStatus !== $request->status) {
             $application->user->notify(new ApplicationStatusUpdated($application));
+            
+            // Broadcast real-time notification
+            $statusMap = [
+                'pending' => 'Đang chờ duyệt',
+                'reviewing' => 'Đang xem xét', 
+                'accepted' => 'Đã chấp nhận',
+                'rejected' => 'Đã từ chối'
+            ];
+            $statusText = $statusMap[$request->status] ?? $request->status;
+            
+            $notificationData = [
+                'id' => uniqid(),
+                'type' => 'ApplicationStatusUpdated',
+                'data' => [
+                    'message' => "Trạng thái đơn ứng tuyển cho công việc '{$application->job->title}' đã chuyển thành: {$statusText}",
+                    'application_id' => $application->id,
+                    'job_id' => $application->job_id,
+                    'job_title' => $application->job->title,
+                    'status' => $request->status,
+                    'status_text' => $statusText,
+                    'url' => route('student.applications')
+                ],
+                'created_at' => now()->toISOString(),
+                'created_at_human' => 'Vừa xong'
+            ];
+            broadcast(new \App\Events\NotificationSent($application->user_id, $notificationData));
         }
 
         return back()->with('success', 'Cập nhật trạng thái thành công!');

@@ -8,11 +8,36 @@
         <div class="w-80 md:w-96 bg-white border-r border-gray-200 flex flex-col flex-shrink-0 relative z-20">
             <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-white">
                 <h2 class="font-bold text-xl text-gray-800">Thông báo</h2>
-                <button @click="markAllRead()" 
-                        x-show="unreadCount > 0"
-                        class="text-sm text-blue-600 hover:text-blue-800">
-                    Đánh dấu tất cả đã đọc
-                </button>
+                <div class="flex items-center space-x-2">
+                    <button @click="toggleSelectMode()" 
+                            :class="selectMode ? 'bg-blue-600 text-white' : 'text-blue-600 hover:text-blue-800'"
+                            class="text-sm px-3 py-1 rounded border border-blue-600 transition">
+                        <span x-text="selectMode ? 'Hủy' : 'Chọn'"></span>
+                    </button>
+                    <button @click="markAllRead()" 
+                            x-show="unreadCount > 0"
+                            class="text-sm text-blue-600 hover:text-blue-800">
+                        Đánh dấu tất cả đã đọc
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Bulk Actions -->
+            <div x-show="selectMode && selectedIds.length > 0" 
+                 class="p-3 bg-blue-50 border-b border-gray-100 flex justify-between items-center">
+                <span class="text-sm text-gray-700">
+                    Đã chọn <span x-text="selectedIds.length"></span> thông báo
+                </span>
+                <div class="flex space-x-2">
+                    <button @click="deleteSelected()" 
+                            class="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
+                        Xóa đã chọn
+                    </button>
+                    <button @click="selectAll()" 
+                            class="text-sm bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700">
+                        Chọn tất cả
+                    </button>
+                </div>
             </div>
             
             <div class="p-3 border-b border-gray-100">
@@ -37,12 +62,22 @@
             <!-- Notifications List -->
             <div class="flex-1 overflow-y-auto">
                 <template x-for="notification in filteredNotifications" :key="notification.id">
-                    <div @click="selectNotification(notification)" 
+                    <div @click="selectMode ? toggleSelect(notification.id) : selectNotification(notification)" 
                          class="group flex items-start p-4 cursor-pointer hover:bg-gray-50 transition border-b border-gray-100"
                          :class="{
                              'bg-blue-50': !notification.read_at,
-                             'bg-blue-100 border-l-4 border-blue-600': selectedNotificationId === notification.id
+                             'bg-blue-100 border-l-4 border-blue-600': selectedNotificationId === notification.id,
+                             'bg-green-50': selectMode && selectedIds.includes(notification.id)
                          }">
+                        
+                        <!-- Checkbox for select mode -->
+                        <div x-show="selectMode" class="flex-shrink-0 mr-3">
+                            <input type="checkbox" 
+                                   :checked="selectedIds.includes(notification.id)"
+                                   @click.stop="toggleSelect(notification.id)"
+                                   class="w-4 h-4 text-blue-600 rounded">
+                        </div>
+                        
                         <div class="flex-shrink-0 mr-3">
                             <div class="w-10 h-10 rounded-full flex items-center justify-center"
                                  :class="notification.type === 'App\\Notifications\\NewApplicationReceived' ? 'bg-green-100' : 'bg-blue-100'">
@@ -55,7 +90,8 @@
                         </div>
                         <div class="flex-shrink-0 flex items-center space-x-2">
                             <div x-show="!notification.read_at" class="w-2 h-2 bg-blue-600 rounded-full"></div>
-                            <button @click.stop="deleteNotification(notification)" 
+                            <button x-show="!selectMode" 
+                                    @click.stop="deleteNotification(notification)" 
                                     class="text-gray-400 hover:text-red-500 transition p-1 rounded hover:bg-gray-100">
                                 <i class="fas fa-times text-sm"></i>
                             </button>
@@ -164,6 +200,8 @@ document.addEventListener('alpine:init', () => {
         searchQuery: '',
         activeFilter: 'all',
         unreadCount: {{ auth()->user()->unreadNotifications->count() }},
+        selectMode: false,
+        selectedIds: [],
 
         get filteredNotifications() {
             let filtered = this.notifications;
@@ -184,18 +222,71 @@ document.addEventListener('alpine:init', () => {
         init() {
             if (typeof Echo !== 'undefined') {
                 Echo.private('notifications.' + {{ auth()->id() }})
-                    .notification((notification) => {
+                    .listen('NotificationSent', (e) => {
+                        console.log('Received NotificationSent:', e);
+                        
                         this.notifications.unshift({
-                            id: notification.id,
-                            type: notification.type,
-                            data: notification.data,
+                            id: e.id,
+                            type: e.type,
+                            data: e.data,
                             read_at: null,
-                            created_at: new Date().toISOString(),
-                            created_at_human: 'Vừa xong'
+                            created_at: e.created_at,
+                            created_at_human: e.created_at_human
                         });
                         this.unreadCount++;
                         this.updateBadge();
                     });
+            }
+        },
+
+        toggleSelectMode() {
+            this.selectMode = !this.selectMode;
+            this.selectedIds = [];
+        },
+
+        toggleSelect(id) {
+            const index = this.selectedIds.indexOf(id);
+            if (index > -1) {
+                this.selectedIds.splice(index, 1);
+            } else {
+                this.selectedIds.push(id);
+            }
+        },
+
+        selectAll() {
+            this.selectedIds = this.filteredNotifications.map(n => n.id);
+        },
+
+        deleteSelected() {
+            if (this.selectedIds.length === 0) return;
+            
+            if (confirm(`Bạn có chắc chắn muốn xóa ${this.selectedIds.length} thông báo đã chọn?`)) {
+                const promises = this.selectedIds.map(id => 
+                    fetch(`/notifications/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
+                );
+
+                Promise.all(promises).then(() => {
+                    this.selectedIds.forEach(id => {
+                        const index = this.notifications.findIndex(n => n.id === id);
+                        if (index > -1) {
+                            if (!this.notifications[index].read_at) {
+                                this.unreadCount = Math.max(0, this.unreadCount - 1);
+                            }
+                            this.notifications.splice(index, 1);
+                        }
+                    });
+                    
+                    this.selectedIds = [];
+                    this.selectMode = false;
+                    this.selectedNotificationId = null;
+                    this.selectedNotification = null;
+                    this.updateBadge();
+                });
             }
         },
 

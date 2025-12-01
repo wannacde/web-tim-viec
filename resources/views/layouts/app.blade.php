@@ -197,7 +197,7 @@
     <script type="module">
         // Real-time notification updates
         window.Echo.private(`notifications.{{ Auth::id() }}`)
-            .notification((notification) => {
+            .listen('NotificationSent', (e) => {
                 // Update notification badge
                 const notificationBadge = document.querySelector('.notification-badge');
                 const currentCount = notificationBadge ? parseInt(notificationBadge.textContent) || 0 : 0;
@@ -220,7 +220,7 @@
                 // Show browser notification if supported
                 if ('Notification' in window && Notification.permission === 'granted') {
                     new Notification('Thông báo mới', {
-                        body: notification.data.message,
+                        body: e.data.message,
                         icon: '/favicon.ico'
                     });
                 }
